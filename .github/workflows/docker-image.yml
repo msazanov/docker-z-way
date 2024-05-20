@@ -14,43 +14,11 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    
     - name: Build the Docker image (amd64)
-      run: |
-        docker build . --file Dockerfile --tag docker-z-way
-        docker run --rm docker-z-way cat /etc/z-way/VERSION > image_version.txt
-      env:
-        IMAGE_VERSION: ${{ steps.set_version.outputs.image_version }}
-        
-    - name: Set image tag (amd64)
-      run: |
-        docker tag docker-z-way docker-z-way:${{ env.IMAGE_VERSION }}-amd64
-        
+      run: docker build . --file Dockerfile --tag docker-z-way:$(date +%s)
+    
     - name: Build the Docker image (armhf)
-      run: |
-        docker build . --file Dockerfile.armhf --tag docker-z-way-armhf
-        docker run --rm docker-z-way-armhf cat /etc/z-way/VERSION > image_version_armhf.txt
-      env:
-        IMAGE_VERSION_ARMHF: ${{ steps.set_version_armhf.outputs.image_version_armhf }}
-        
-    - name: Set image tag (armhf)
-      run: |
-        docker tag docker-z-way-armhf docker-z-way-armhf:${{ env.IMAGE_VERSION_ARMHF }}-armhf
-        
+      run: docker build . --file Dockerfile.armhf --tag docker-z-way-armhf:$(date +%s)
+    
     - name: Build the Docker image (aarch64)
-      run: |
-        docker build . --file Dockerfile.aarch64 --tag docker-z-way-aarch64
-        docker run --rm docker-z-way-aarch64 cat /etc/z-way/VERSION > image_version_aarch64.txt
-      env:
-        IMAGE_VERSION_AARCH64: ${{ steps.set_version_aarch64.outputs.image_version_aarch64 }}
-        
-    - name: Set image tag (aarch64)
-      run: |
-        docker tag docker-z-way-aarch64 docker-z-way-aarch64:${{ env.IMAGE_VERSION_AARCH64 }}-aarch64
-        
-    - name: Use Docker Buildx
-      uses: docker/setup-buildx-action@v1
-      
-    - name: Build and push Docker images
-      run: |
-        docker buildx build --platform linux/amd64,linux/arm/v7,linux/arm64/v8 --push --tag docker-z-way:${{ env.IMAGE_VERSION }}-amd64 --tag docker-z-way-armhf:${{ env.IMAGE_VERSION_ARMHF }}-armhf --tag docker-z-way-aarch64:${{ env.IMAGE_VERSION_AARCH64 }}-aarch64 .
+      run: docker build . --file Dockerfile.aarch64 --tag docker-z-way-aarch64:$(date +%s)
