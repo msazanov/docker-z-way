@@ -14,5 +14,27 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag docker-z-way:$(date +%s)
+    
+    - name: Build the Docker image (amd64)
+      run: |
+        docker build . --file Dockerfile --tag docker-z-way:$(cat /etc/z-way/VERSION)
+        echo $(cat /etc/z-way/VERSION) > image_version.txt
+        docker run --rm docker-z-way:$(cat /etc/z-way/VERSION) cat /etc/z-way/VERSION > image_version.txt
+        cat image_version.txt
+        rm image_version.txt
+        
+    - name: Build the Docker image (armhf)
+      run: |
+        docker build . --file Dockerfile.armhf --tag docker-z-way-armhf:$(cat /etc/z-way/VERSION)
+        echo $(cat /etc/z-way/VERSION) > image_version.txt
+        docker run --rm docker-z-way-armhf:$(cat /etc/z-way/VERSION) cat /etc/z-way/VERSION > image_version.txt
+        cat image_version.txt
+        rm image_version.txt
+    
+    - name: Build the Docker image (aarch64)
+      run: |
+        docker build . --file Dockerfile.aarch64 --tag docker-z-way-aarch64:$(cat /etc/z-way/VERSION)
+        echo $(cat /etc/z-way/VERSION) > image_version.txt
+        docker run --rm docker-z-way-aarch64:$(cat /etc/z-way/VERSION) cat /etc/z-way/VERSION > image_version.txt
+        cat image_version.txt
+        rm image_version.txt
