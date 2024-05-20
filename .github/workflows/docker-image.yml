@@ -24,7 +24,7 @@ jobs:
         
     - name: Set image tag (amd64)
       run: |
-        docker tag docker-z-way docker-z-way:$IMAGE_VERSION-amd64
+        docker tag docker-z-way docker-z-way:${{ env.IMAGE_VERSION }}-amd64
         
     - name: Build the Docker image (armhf)
       run: |
@@ -35,7 +35,7 @@ jobs:
         
     - name: Set image tag (armhf)
       run: |
-        docker tag docker-z-way-armhf docker-z-way-armhf:$IMAGE_VERSION_ARMHF-armhf
+        docker tag docker-z-way-armhf docker-z-way-armhf:${{ env.IMAGE_VERSION_ARMHF }}-armhf
         
     - name: Build the Docker image (aarch64)
       run: |
@@ -46,11 +46,11 @@ jobs:
         
     - name: Set image tag (aarch64)
       run: |
-        docker tag docker-z-way-aarch64 docker-z-way-aarch64:$IMAGE_VERSION_AARCH64-aarch64
+        docker tag docker-z-way-aarch64 docker-z-way-aarch64:${{ env.IMAGE_VERSION_AARCH64 }}-aarch64
         
     - name: Use Docker Buildx
       uses: docker/setup-buildx-action@v1
       
     - name: Build and push Docker images
       run: |
-        docker buildx build --platform linux/amd64,linux/arm/v7,linux/arm64/v8 --push --tag docker-z-way:$IMAGE_VERSION-amd64 --tag docker-z-way-armhf:$IMAGE_VERSION_ARMHF-armhf --tag docker-z-way-aarch64:$IMAGE_VERSION_AARCH64-aarch64 .
+        docker buildx build --platform linux/amd64,linux/arm/v7,linux/arm64/v8 --push --tag docker-z-way:${{ env.IMAGE_VERSION }}-amd64 --tag docker-z-way-armhf:${{ env.IMAGE_VERSION_ARMHF }}-armhf --tag docker-z-way-aarch64:${{ env.IMAGE_VERSION_AARCH64 }}-aarch64 .
